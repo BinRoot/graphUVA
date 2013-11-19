@@ -4,21 +4,20 @@ import Data.Char
 
 main = do
   rsp <- simpleHTTP $ uvaRequest "abb"
-  v <- fmap (takeWhile isAscii) (getResponseBody rsp)
-  putStrLn v
-  
+  rawResult <- fmap (takeWhile isAscii) (getResponseBody rsp)
+  print rawResult
 
-data Person = Person { firstName :: String
-                     , lastName :: String
-                     , email :: String
-                     , department :: String
-                     , other :: [(String, String)] -- grad status, department, phonenumber, etc
-                     }
+data Person = Person 
+              { firstName :: String
+              , lastName :: String
+              , email :: String
+              , department :: String
+              , other :: [(String, String)] -- grad status, department, phonenumber, etc
+              } deriving Show
+              
+data SearchResultErr = NoResultsErr | TooManyResultsErr deriving Show
 
-data SearchResultErr = NoResultsErr | TooManyResultsErr
-
-data SearchResult = Either [Person] SearchResultErr
-
+type SearchResult = Either SearchResultErr [Person]
 
 uvaRequest :: String -> Request_String
 uvaRequest query = Request { 
