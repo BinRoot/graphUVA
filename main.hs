@@ -11,9 +11,13 @@ main = do
   rsp <- simpleHTTP $ uvaRequest (if (take 1 args)==[] then "aaa" else head args)
   html <- fmap (takeWhile isAscii) (getResponseBody rsp)
   let doc = readString [withParseHTML yes, withWarnings no] html
-  rows <- runX $ doc //> hasName "tr"
-  dat <- runX $ doc >>> multi (hasName "td") >>> getChildren
-  print $ readTableRows rows
+  centers <- runX $ doc //> hasName "center"
+  if length centers == 2 
+    then 
+      print "found one result. TODO: parse it."
+    else do
+      rows <- runX $ doc //> hasName "tr"
+      print $ readTableRows rows
   
 readTableRows (a:b:rows) = fmap parseRow rows
 readTableRows rows = []
