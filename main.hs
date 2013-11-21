@@ -8,13 +8,21 @@ import System.Environment
 
 main = do
   args <- getArgs
-  rsp <- simpleHTTP $ uvaRequest (if (take 1 args)==[] then "aaa" else head args)
+  rsp <- simpleHTTP $ uvaRequest (if (take 1 args)==[] then "abba" else head args)
   html <- fmap (takeWhile isAscii) (getResponseBody rsp)
   let doc = readString [withParseHTML yes, withWarnings no] html
   centers <- runX $ doc //> hasName "center"
   if length centers == 2 
-    then 
-      print "found one result. TODO: parse it."
+    then do
+      texts <- runX $ doc //> hasName "td" //> getText
+      let fullName = (unwords.init.words) (texts !! 1)
+      let person = Person {
+            firstName = (head.words) fullName,
+            lastName = (last.words) fullName,
+            email = map toLower $ texts !! 12,
+            other = []
+            }
+      print [person]
     else do
       rows <- runX $ doc //> hasName "tr"
       print $ readTableRows rows
@@ -22,12 +30,15 @@ main = do
 readTableRows (a:b:rows) = fmap parseRow rows
 readTableRows rows = []
 
-parseRow row = ( getNameFromTr row,
-                 getEmailFromTr row,
-                 getPhoneNumberFromTr row,
-                 getTypeFromTr row,
-                 getDepartmentFromTr row
-               )
+parseRow row = Person { 
+  firstName = (head.words) fullName,
+  lastName = (last.words) fullName,
+  email = map toLower $ getEmailFromTr row,
+  other = [("phoneNumber", getPhoneNumberFromTr row),
+           ("status", getTypeFromTr row),
+           ("department", getDepartmentFromTr row)]
+  }
+  where fullName = (unwords.init.words) $ getNameFromTr row
 
 getNameFromTr row = getLinkTextFromTd $ (getTreeChildren row) !! 3
 getEmailFromTr row = getLinkTextFromTd $ (getTreeChildren row) !! 5
