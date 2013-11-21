@@ -8,24 +8,30 @@ import System.Environment
 
 main = do
   args <- getArgs
-  rsp <- simpleHTTP $ uvaRequest (if (take 1 args)==[] then "abba" else head args)
+  rsp <- simpleHTTP $ uvaRequest (if (take 1 args)==[] then "zxc" else head args)
   html <- fmap (takeWhile isAscii) (getResponseBody rsp)
   let doc = readString [withParseHTML yes, withWarnings no] html
-  centers <- runX $ doc //> hasName "center"
-  if length centers == 2 
+  h3s <- runX $ doc //> hasName "h3"
+  if length h3s == 2 
     then do
-      texts <- runX $ doc //> hasName "td" //> getText
-      let fullName = (unwords.init.words) (texts !! 1)
-      let person = Person {
-            firstName = (head.words) fullName,
-            lastName = (last.words) fullName,
-            email = map toLower $ texts !! 12,
-            other = []
-            }
-      print [person]
+      let errMsg = (getText'.getTreeVal.head.getTreeChildren.head) h3s
+      print errMsg
     else do
-      rows <- runX $ doc //> hasName "tr"
-      print $ readTableRows rows
+      centers <- runX $ doc //> hasName "center"
+      if length centers == 2 
+        then do
+          texts <- runX $ doc //> hasName "td" //> getText
+          let fullName = (unwords.init.words) (texts !! 1)
+          let person = Person {
+                firstName = (head.words) fullName,
+                lastName = (last.words) fullName,
+                email = map toLower $ texts !! 12,
+                other = []
+                }
+          print [person]
+          else do
+            rows <- runX $ doc //> hasName "tr"
+            print $ readTableRows rows
   
 readTableRows (a:b:rows) = fmap parseRow rows
 readTableRows rows = []
