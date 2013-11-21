@@ -8,7 +8,7 @@ import System.Environment
 
 main = do
   args <- getArgs
-  let query = if (take 1 args)==[] then "a" else head args
+  let query = if args==[] then "a" else head args
   main' query
 
 main' query = do
