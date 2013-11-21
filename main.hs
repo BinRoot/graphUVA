@@ -16,23 +16,21 @@ main' query = do
   rsp <- simpleHTTP $ uvaRequest query
   html <- fmap (takeWhile isAscii) (getResponseBody rsp)
   let doc = readString [withParseHTML yes, withWarnings no] html
-  scanDoc query doc
+  searchResult <- scanDoc query doc
+  print searchResult
+  if searchResult == Left TooManyResultsErr
+    then main' $ nextDeepQuery query
+    else if (next == "*") then print "done!" else main' next where next = nextQuery query
   
-scanDoc :: String -> IOStateArrow () XmlTree XmlTree -> IO ()
-scanDoc query doc = do  
+scanDoc :: String -> IOStateArrow () XmlTree XmlTree -> IO (SearchResult)
+scanDoc query doc = do
   h3s <- runX $ doc //> hasName "h3"
   if length h3s == 2 
     then do
       let errMsg = (getText'.getTreeVal.head.getTreeChildren.head) h3s
-      print errMsg
       if errMsg == "No matching entries were found" 
-        then
-          if nextQuery query == "*"
-            then print "done!"
-          else 
-            main' $ nextQuery query
-        else
-          main' $ nextDeepQuery query
+        then return $ Left NoResultsErr
+        else return $ Left TooManyResultsErr
     else do
       centers <- runX $ doc //> hasName "center"
       if length centers == 2 
@@ -45,13 +43,10 @@ scanDoc query doc = do
                 email = map toLower $ texts !! 12,
                 other = []
                 }
-          print [person]
+          return $ Right [person]
         else do
           rows <- runX $ doc //> hasName "tr"
-          print $ readTableRows rows
-      if nextQuery query == "*"
-        then print "done!"
-        else main' $ nextQuery query
+          return $ Right (readTableRows rows)
   
 nextDeepQuery query = query ++ "a"
 
@@ -97,9 +92,9 @@ data Person = Person
               , lastName :: String
               , email :: String
               , other :: [(String, String)] -- grad status, department, phonenumber, etc
-              } deriving Show
+              } deriving (Show, Eq)
               
-data SearchResultErr = NoResultsErr | TooManyResultsErr deriving Show
+data SearchResultErr = NoResultsErr | TooManyResultsErr deriving (Show, Eq)
 
 type SearchResult = Either SearchResultErr [Person]
 
