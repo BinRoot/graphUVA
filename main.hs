@@ -1,27 +1,63 @@
 import Network.HTTP
 import Network.URI
 import Data.Char
--- import Text.XML.HXT.Parser.XmlParsec
 import Text.XML.HXT.Core
 import Data.Tree.NTree.TypeDefs
 import System.Environment 
+import Text.JSON
 
+data Person = Person 
+              { firstName :: String
+              , lastName :: String
+              , email :: String
+              , other :: [(String, String)] -- grad status, department, phonenumber, etc
+              } deriving (Show, Eq)
+
+instance JSON Person where 
+  showJSON p = showJSON $ firstName p
+
+
+data SearchResultErr = NoResultsErr | TooManyResultsErr deriving (Show, Eq)
+instance JSON SearchResultErr where 
+  showJSON err = showJSON "err"
+
+
+type SearchResult = Either SearchResultErr [Person]
+
+-- ./main "abba" # searches only "abba"
+-- ./main "b" "c" # searches between "b" and "c"
+-- ./main # searches everything
 main = do
   args <- getArgs
-  let query = if args==[] then "a" else head args
-  main' query
+  doWork args
+  
+doWork args
+  | length args == 0 = main' "a" "{"
+  | length args == 1 = do
+    let query = args !! 0
+    doc <- getDoc query
+    searchResult <- scanDoc query doc
+    let personList = getRight searchResult
+    print $ encode $ showJSON personList
+  | otherwise        = main' (args !! 0) (args !! 1)
 
-main' query = do
+getRight (Left a) = []
+getRight (Right a) = a
+
+main' query stop = do
   print query
-  rsp <- simpleHTTP $ uvaRequest query
-  html <- fmap (takeWhile isAscii) (getResponseBody rsp)
-  let doc = readString [withParseHTML yes, withWarnings no] html
+  doc <- getDoc query
   searchResult <- scanDoc query doc
   print searchResult
   if searchResult == Left TooManyResultsErr
-    then main' $ nextDeepQuery query
-    else if (next == "*") then print "done!" else main' next where next = nextQuery query
+    then main' (nextDeepQuery query) stop
+    else if (next >= stop) then print "done!" else main' next stop where next = nextQuery query
   
+getDoc query = do  
+  rsp <- simpleHTTP $ uvaRequest query
+  html <- fmap (takeWhile isAscii) (getResponseBody rsp)
+  return $ readString [withParseHTML yes, withWarnings no] html
+
 scanDoc :: String -> IOStateArrow () XmlTree XmlTree -> IO (SearchResult)
 scanDoc query doc = do
   h3s <- runX $ doc //> hasName "h3"
@@ -50,7 +86,7 @@ scanDoc query doc = do
   
 nextDeepQuery query = query ++ "a"
 
-nextQuery "z" = "*"
+nextQuery "z" = "{"
 nextQuery query = if (last query) == 'z'
                     then ((init.init) query) ++ [succ $ last $ init query]
                     else (init query) ++ [succ $ last query]
@@ -87,16 +123,6 @@ getTreeChildren (NTree a b) = b
 getText' (XText a) = a
 
 
-data Person = Person 
-              { firstName :: String
-              , lastName :: String
-              , email :: String
-              , other :: [(String, String)] -- grad status, department, phonenumber, etc
-              } deriving (Show, Eq)
-              
-data SearchResultErr = NoResultsErr | TooManyResultsErr deriving (Show, Eq)
-
-type SearchResult = Either SearchResultErr [Person]
 
 uvaRequest :: String -> Request_String
 uvaRequest query = Request { 
