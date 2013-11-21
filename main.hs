@@ -16,6 +16,10 @@ main' query = do
   rsp <- simpleHTTP $ uvaRequest query
   html <- fmap (takeWhile isAscii) (getResponseBody rsp)
   let doc = readString [withParseHTML yes, withWarnings no] html
+  scanDoc query doc
+  
+scanDoc :: String -> IOStateArrow () XmlTree XmlTree -> IO ()
+scanDoc query doc = do  
   h3s <- runX $ doc //> hasName "h3"
   if length h3s == 2 
     then do
@@ -49,15 +53,16 @@ main' query = do
         then print "done!"
         else main' $ nextQuery query
   
-readTableRows (a:b:rows) = fmap parseRow rows
-readTableRows rows = []
-
 nextDeepQuery query = query ++ "a"
 
 nextQuery "z" = "*"
 nextQuery query = if (last query) == 'z'
                     then ((init.init) query) ++ [succ $ last $ init query]
                     else (init query) ++ [succ $ last query]
+
+readTableRows :: [NTree XNode] -> [Person]
+readTableRows (a:b:rows) = fmap parseRow rows
+readTableRows rows = []
 
 parseRow row = Person { 
   firstName = (head.words) fullName,
