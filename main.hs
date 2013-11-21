@@ -8,7 +8,12 @@ import System.Environment
 
 main = do
   args <- getArgs
-  rsp <- simpleHTTP $ uvaRequest (if (take 1 args)==[] then "zxc" else head args)
+  let query = if (take 1 args)==[] then "a" else head args
+  main' query
+
+main' query = do
+  print query
+  rsp <- simpleHTTP $ uvaRequest query
   html <- fmap (takeWhile isAscii) (getResponseBody rsp)
   let doc = readString [withParseHTML yes, withWarnings no] html
   h3s <- runX $ doc //> hasName "h3"
@@ -16,6 +21,14 @@ main = do
     then do
       let errMsg = (getText'.getTreeVal.head.getTreeChildren.head) h3s
       print errMsg
+      if errMsg == "No matching entries were found" 
+        then
+          if nextQuery query == "*"
+            then print "done!"
+          else 
+            main' $ nextQuery query
+        else
+          main' $ nextDeepQuery query
     else do
       centers <- runX $ doc //> hasName "center"
       if length centers == 2 
@@ -29,12 +42,22 @@ main = do
                 other = []
                 }
           print [person]
-          else do
-            rows <- runX $ doc //> hasName "tr"
-            print $ readTableRows rows
+        else do
+          rows <- runX $ doc //> hasName "tr"
+          print $ readTableRows rows
+      if nextQuery query == "*"
+        then print "done!"
+        else main' $ nextQuery query
   
 readTableRows (a:b:rows) = fmap parseRow rows
 readTableRows rows = []
+
+nextDeepQuery query = query ++ "a"
+
+nextQuery "z" = "*"
+nextQuery query = if (last query) == 'z'
+                    then ((init.init) query) ++ [succ $ last $ init query]
+                    else (init query) ++ [succ $ last query]
 
 parseRow row = Person { 
   firstName = (head.words) fullName,
