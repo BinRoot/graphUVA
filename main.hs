@@ -6,6 +6,9 @@ import Data.Tree.NTree.TypeDefs
 import System.Environment 
 import Text.JSON
 
+-- search for "zacho" fails w/
+-- main: Prelude.(!!): index too large
+
 data Person = Person 
               { firstName :: String
               , lastName :: String
@@ -14,12 +17,23 @@ data Person = Person
               } deriving (Show, Eq)
 
 instance JSON Person where 
-  showJSON p = showJSON $ firstName p
+  showJSON p = jobj $ [ ("firstName", jstr $ firstName p)
+                      , ("lastName", jstr $ lastName p)
+                      , ("email", jstr $ email p)
+                      , ("other", jobj $ map toJSValTuple (other p)) ]
 
+toJSValTuple (a, b) = (a, jstr b)
+
+jstr :: String -> JSValue
+jstr = JSString . toJSString
+
+jobj :: [(String,JSValue)] -> JSValue
+jobj = JSObject . toJSObject
 
 data SearchResultErr = NoResultsErr | TooManyResultsErr deriving (Show, Eq)
 instance JSON SearchResultErr where 
-  showJSON err = showJSON "err"
+  showJSON NoResultsErr = jobj $ [("err", jstr "No Results")]
+  showJSON TooManyResultsErr = jobj $ [("err", jstr "Too Many Results")]
 
 
 type SearchResult = Either SearchResultErr [Person]
@@ -37,8 +51,7 @@ doWork args
     let query = args !! 0
     doc <- getDoc query
     searchResult <- scanDoc query doc
-    let personList = getRight searchResult
-    print $ encode $ showJSON personList
+    print $ encode $ showJSON searchResult
   | otherwise        = main' (args !! 0) (args !! 1)
 
 getRight (Left a) = []
