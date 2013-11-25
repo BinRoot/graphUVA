@@ -6,7 +6,7 @@ $(document).ready(function(){
       engine: Hogan
     });
 
-    $('.search').bind('typeahead:selected', function(obj, datum, name) {
-        chrome.runtime.sendMessage( { person: "Jasdev Singh" } );
+    $('.search').on('typeahead:selected', function(obj, datum, name) {
+        chrome.runtime.sendMessage( { person: "Jasdev Singh" }, function(response) {});
     });
 });
