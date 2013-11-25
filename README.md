@@ -11,13 +11,13 @@ Sample JSON
 
     { "Right":
       [ { "firstName" : "Bob",
-      	  "lastName"  : "Boo",
-	  "email"     : "bob@boo.com",
-	  "other"     : { "phoneNumber" : "123",
-	  	      	  "status"      : "Undergraduate Student",
-			  "department"  : "Engineering Undergraduate-senu"
-			}
-	}
+          "lastName"  : "Boo",
+          "email"     : "bob@boo.com",
+          "other"     : { "phoneNumber" : "123",
+                          "status"      : "Undergraduate Student",
+                          "department"  : "Engineering Undergraduate-senu"
+                        }
+        }
       ]
     }
 
