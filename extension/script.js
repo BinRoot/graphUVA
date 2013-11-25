@@ -7,6 +7,7 @@ $(document).ready(function(){
     });
 
     $('.search').on('typeahead:selected', function(obj, datum, name) {
-        chrome.runtime.sendMessage( { person: "Jasdev Singh" }, function(response) {});
+        alert("click event recieved");
+        chrome.runtime.sendMessage( { person: "Jasdev Singh" });
     });
 });
