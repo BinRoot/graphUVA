@@ -112,12 +112,12 @@ parseRow row = Person {
   firstName = (head.tail.words) fullName,
   lastName = (init.head.words) fullName,
   email = map toLower $ getEmailFromTr row,
-  other = [("phoneNumber", getPhoneNumberFromTr row),
-           ("status", getTypeFromTr row),
-           ("department", getDepartmentFromTr row)]
+  other = [ ("phoneNumber", if pNum == "\160" then "" else pNum)
+          , ("status", getTypeFromTr row)
+          , ("department", getDepartmentFromTr row)]
   }
   where fullName = (unwords.init.words) $ getNameFromTr row
--- Abbate, Jessica Lee
+        pNum = getPhoneNumberFromTr row
 
 getNameFromTr row = getLinkTextFromTd $ (getTreeChildren row) !! 3
 getEmailFromTr row = getLinkTextFromTd $ (getTreeChildren row) !! 5
