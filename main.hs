@@ -54,9 +54,6 @@ doWork args
     print $ encode $ showJSON searchResult
   | otherwise        = main' (args !! 0) (args !! 1)
 
-getRight (Left a) = []
-getRight (Right a) = a
-
 main' query stop = do
   print query
   doc <- getDoc query
@@ -89,8 +86,9 @@ scanDoc query doc = do
           let person = Person {
                 firstName = (head.words) fullName,
                 lastName = (last.words) fullName,
-                email = map toLower $ texts !! 12,
-                other = []
+                email = safeMap toLower texts 12,
+                other = [("status", trim $ texts !! 6)
+                        ,("department", trim $ texts !! 8)]
                 }
           return $ Right [person]
         else do
@@ -98,6 +96,8 @@ scanDoc query doc = do
           return $ Right (readTableRows rows)
   
 nextDeepQuery query = query ++ "a"
+
+safeMap f ls n = if (length ls) >= n then map f $ ls !! n else ""
 
 nextQuery "z" = "{"
 nextQuery query = if (last query) == 'z'
@@ -109,14 +109,15 @@ readTableRows (a:b:rows) = fmap parseRow rows
 readTableRows rows = []
 
 parseRow row = Person { 
-  firstName = (head.words) fullName,
-  lastName = (last.words) fullName,
+  firstName = (head.tail.words) fullName,
+  lastName = (init.head.words) fullName,
   email = map toLower $ getEmailFromTr row,
   other = [("phoneNumber", getPhoneNumberFromTr row),
            ("status", getTypeFromTr row),
            ("department", getDepartmentFromTr row)]
   }
   where fullName = (unwords.init.words) $ getNameFromTr row
+-- Abbate, Jessica Lee
 
 getNameFromTr row = getLinkTextFromTd $ (getTreeChildren row) !! 3
 getEmailFromTr row = getLinkTextFromTd $ (getTreeChildren row) !! 5
@@ -135,7 +136,9 @@ getTreeVal (NTree a b) = a
 getTreeChildren (NTree a b) = b
 getText' (XText a) = a
 
-
+trim :: String -> String
+trim = f . f
+   where f = reverse . dropWhile isSpace
 
 uvaRequest :: String -> Request_String
 uvaRequest query = Request { 
