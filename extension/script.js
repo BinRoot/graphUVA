@@ -3,11 +3,18 @@ $(document).ready(function(){
         name: 'results',
         remote: 'http://localhost:5000/search?q=%QUERY',
         limit: 10,
-        template: ['<p>{{value}} - {{email}}</p>'].join(''),
+        template: ['<p>{{value}}</p>',
+                   '<p>{{email}}</p>',
+                   '<p class="email">{{phoneNumber}}</p>',
+                  ].join(''),
         engine: Hogan
     });
 
     $('.search').on('typeahead:selected', function(obj, datum, name) {
-        chrome.runtime.sendMessage( { person: "Jasdev Singh" });
+        chrome.runtime.sendMessage( { type: "selection", person: datum.value });
+    });
+
+    $('.search').on('typeahead:closed', function(obj, datum, name) {
+        chrome.runtime.sendMessage( { type: "close" });
     });
 });
