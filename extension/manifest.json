@@ -5,7 +5,7 @@
   "description": "Autocomplete for UVa computing IDs",
   "version": "1.0",
   "content_scripts": [ {
-    "js": [ "jquery-2.0.3.min.js", "hogan-2.0.0.js", "typeahead.min.js"],
+    "js": [ "jquery-2.0.3.min.js", "hogan-2.0.0.js", "typeahead.min.js", "script.js"],
     "matches": [ "http://*/*", "https://*/*"]
   }],
   "browser_action": {
@@ -16,7 +16,8 @@
     "tabs"
   ],
   "background": {
-    "scripts": ["background.js"]
+    "scripts": ["background.js"],
+    "persistent": false
   },
   "content_security_policy": "script-src 'self' 'unsafe-eval'; object-src 'self'"
 }
