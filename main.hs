@@ -17,10 +17,10 @@ data Person = Person
               } deriving (Show, Eq)
 
 instance JSON Person where 
-  showJSON p = jobj $ [ ("firstName", jstr $ firstName p)
-                      , ("lastName", jstr $ lastName p)
-                      , ("email", jstr $ email p)
-                      , ("other", jobj $ map toJSValTuple (other p)) ]
+  showJSON p = jobj [ ("firstName", jstr $ firstName p)
+                    , ("lastName", jstr $ lastName p)
+                    , ("email", jstr $ email p)
+                    , ("other", jobj $ map toJSValTuple (other p)) ]
 
 toJSValTuple (a, b) = (a, jstr b)
 
@@ -32,8 +32,8 @@ jobj = JSObject . toJSObject
 
 data SearchResultErr = NoResultsErr | TooManyResultsErr deriving (Show, Eq)
 instance JSON SearchResultErr where 
-  showJSON NoResultsErr = jobj $ [("err", jstr "No Results")]
-  showJSON TooManyResultsErr = jobj $ [("err", jstr "Too Many Results")]
+  showJSON NoResultsErr = jobj [("err", jstr "No Results")]
+  showJSON TooManyResultsErr = jobj [("err", jstr "Too Many Results")]
 
 
 type SearchResult = Either SearchResultErr [Person]
@@ -46,13 +46,13 @@ main = do
   doWork args
   
 doWork args
-  | length args == 0 = main' "a" "{"
+  | null args = main' "a" "{"
   | length args == 1 = do
-    let query = args !! 0
+    let query = head args
     doc <- getDoc query
     searchResult <- scanDoc query doc
     print $ encode $ showJSON searchResult
-  | otherwise        = main' (args !! 0) (args !! 1)
+  | otherwise        = main' (head args) (args !! 1)
 
 main' query stop = do
   print query
@@ -61,22 +61,22 @@ main' query stop = do
   print searchResult
   if searchResult == Left TooManyResultsErr
     then main' (nextDeepQuery query) stop
-    else if (next >= stop) then print "done!" else main' next stop where next = nextQuery query
+    else if next >= stop then print "done!" else main' next stop where next = nextQuery query
   
 getDoc query = do  
   rsp <- simpleHTTP $ uvaRequest query
   html <- fmap (takeWhile isAscii) (getResponseBody rsp)
   return $ readString [withParseHTML yes, withWarnings no] html
 
-scanDoc :: String -> IOStateArrow () XmlTree XmlTree -> IO (SearchResult)
+scanDoc :: String -> IOStateArrow () XmlTree XmlTree -> IO SearchResult
 scanDoc query doc = do
   h3s <- runX $ doc //> hasName "h3"
   if length h3s == 2 
     then do
       let errMsg = (getText'.getTreeVal.head.getTreeChildren.head) h3s
-      if errMsg == "No matching entries were found" 
-        then return $ Left NoResultsErr
-        else return $ Left TooManyResultsErr
+      return $ Left $ if errMsg == "No matching entries were found" 
+                      then NoResultsErr
+                      else TooManyResultsErr
     else do
       centers <- runX $ doc //> hasName "center"
       if length centers == 2 
@@ -97,12 +97,12 @@ scanDoc query doc = do
   
 nextDeepQuery query = query ++ "a"
 
-safeMap f ls n = if (length ls) >= n then map f $ ls !! n else ""
+safeMap f ls n = if length ls >= n then map f $ ls !! n else ""
 
 nextQuery "z" = "{"
-nextQuery query = if (last query) == 'z'
-                    then ((init.init) query) ++ [succ $ last $ init query]
-                    else (init query) ++ [succ $ last query]
+nextQuery query = if last query == 'z'
+                    then (init.init) query ++ [succ $ last $ init query]
+                    else init query ++ [succ $ last query]
 
 readTableRows :: [NTree XNode] -> [Person]
 readTableRows (a:b:rows) = fmap parseRow rows
@@ -119,14 +119,14 @@ parseRow row = Person {
   where fullName = (unwords.init.words) $ getNameFromTr row
         pNum = getPhoneNumberFromTr row
 
-getNameFromTr row = getLinkTextFromTd $ (getTreeChildren row) !! 3
-getEmailFromTr row = getLinkTextFromTd $ (getTreeChildren row) !! 5
-getPhoneNumberFromTr row = getTextFromTd $ (getTreeChildren row) !! 7
-getTypeFromTr row = getTextFromTd $ (getTreeChildren row) !! 9
-getDepartmentFromTr row = getTextFromTd $ (getTreeChildren row) !! 11
+getNameFromTr row = getLinkTextFromTd $ getTreeChildren row !! 3
+getEmailFromTr row = getLinkTextFromTd $ getTreeChildren row !! 5
+getPhoneNumberFromTr row = getTextFromTd $ getTreeChildren row !! 7
+getTypeFromTr row = getTextFromTd $ getTreeChildren row !! 9
+getDepartmentFromTr row = getTextFromTd $ getTreeChildren row !! 11
 
 getTextFromTd tree = getText' $ getTreeVal $ head $ getTreeChildren tree
-getLinkTextFromTd tree = if val==[] 
+getLinkTextFromTd tree = if null val
                          then "" 
                          else (getText'.getTreeVal.head) val
   where val = (getTreeChildren.head.getTreeChildren) tree
