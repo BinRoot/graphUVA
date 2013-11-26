@@ -97,15 +97,18 @@ readTableRows (a:b:rows) = fmap parseRow rows
 readTableRows rows = []
 
 parseRow row = Person { 
-  firstName = (head.tail.words) fullName,
-  lastName = (init.head.words) fullName,
-  email = map toLower $ getEmailFromTr row,
-  other = [ ("phoneNumber", if pNum == "\160" then "" else pNum)
-          , ("status", getTypeFromTr row)
-          , ("department", getDepartmentFromTr row)]
+  firstName = clean $ (head.tail.words) fullName,
+  lastName = clean $ (init.head.words) fullName,
+  email = clean $ map toLower $ getEmailFromTr row,
+  other = [ ("phoneNumber", clean pNum)
+          , ("status", clean $ getTypeFromTr row)
+          , ("department", clean $ getDepartmentFromTr row)]
   }
   where fullName = (unwords.init.words) $ getNameFromTr row
         pNum = getPhoneNumberFromTr row
+        
+clean :: String -> String
+clean str = if str == "\160" then "" else str
 
 getNameFromTr row = getLinkTextFromTd $ getTreeChildren row !! 3
 getEmailFromTr row = getLinkTextFromTd $ getTreeChildren row !! 5
