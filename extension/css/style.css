@@ -69,10 +69,19 @@ p {
 
 .tt-suggestion.tt-is-under-cursor {
   color: #fff;
-  background-color: #0097cf;
+  background-color: rgba(0, 151, 207, 0.40);
 
 }
 
 .tt-suggestion p {
   margin: 0;
+}
+
+.details {
+    color: #2daada;
+    font-size: 12px;
+}
+
+.email {
+    font-size: 12px;
 }

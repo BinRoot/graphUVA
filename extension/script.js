@@ -2,10 +2,10 @@ $(document).ready(function(){
     $('input.search').typeahead({
         name: 'results',
         remote: 'http://localhost:5000/search?q=%QUERY',
-        limit: 10,
-        template: ['<p>{{value}}</p>',
-                   '<p>{{email}}</p>',
-                   '<p class="email">{{phoneNumber}}</p>',
+        limit: 6,
+        template: ['<p>{{value}} {{#email}}<span class="email">- {{email}}{{/email}}</p>',
+                   '<p class="details">{{status}}</p>',
+                   '<p class="details">{{department}}</p>',
                   ].join(''),
         engine: Hogan
     });

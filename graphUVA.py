@@ -21,7 +21,7 @@ def query():
         for result in results:
             person = {}
             person["value"] = result.get("firstName") + " " + result.get("lastName")
-            person["email"] = result.get("email")
+            person["email"] = None if result.get("email") == "" else result.get("email")
             person["phoneNumber"] = result.get("other").get("phoneNumber")
             person["status"] = result.get("other").get("status")
             person["department"] = result.get("other").get("department")
