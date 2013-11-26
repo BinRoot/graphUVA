@@ -72,11 +72,11 @@ scanDoc query doc = do
           texts <- runX $ doc //> hasName "td" //> getText
           let fullName = (unwords.init.words) (texts !! 1)
           let person = Person {
-                firstName = (head.words) fullName,
-                lastName = (last.words) fullName,
-                email = safeMap toLower texts 12,
-                other = [("status", trim $ texts !! 6)
-                        ,("department", trim $ texts !! 8)]
+                firstName = clean $ (head.words) fullName,
+                lastName = clean $ (last.words) fullName,
+                email = clean $ safeMap toLower texts 12,
+                other = [("status", clean $ trim $ texts !! 6)
+                        ,("department", clean $ trim $ texts !! 8)]
                 }
           return $ Right [person]
         else do
@@ -107,8 +107,6 @@ parseRow row = Person {
   where fullName = (unwords.init.words) $ getNameFromTr row
         pNum = getPhoneNumberFromTr row
         
-clean :: String -> String
-clean str = if str == "\160" then "" else str
 
 getNameFromTr row = getLinkTextFromTd $ getTreeChildren row !! 3
 getEmailFromTr row = getLinkTextFromTd $ getTreeChildren row !! 5
@@ -148,3 +146,6 @@ jobj = JSObject . toJSObject
 trim :: String -> String
 trim = f . f
    where f = reverse . dropWhile isSpace
+         
+clean :: String -> String
+clean str = if str == "\160" then "" else str
