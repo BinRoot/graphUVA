@@ -112,7 +112,7 @@ nextDeepQuery query = query ++ "a"
 
 nextQuery "z" = "{"
 nextQuery query = if last query == 'z'
-                    then (init.init) query ++ [succ $ last $ init query]
+                    then nextQuery $ init query
                     else init query ++ [succ $ last query]
 
 readTableRows :: [NTree XNode] -> [Person]
