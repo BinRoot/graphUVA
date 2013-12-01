@@ -44,25 +44,25 @@ main = do
   Database.MongoDB.close pipe
 
 doWork args pipe
-  | null args = main' "a" "{"
+  | null args = main' "a" "{" pipe
   | length args == 1 = do
     let query = head args
     doc <- getDoc query
     searchResult <- scanDoc query doc
-    case searchResult of
-      Right plist -> access pipe master "graphuva" (runInsert plist)
-      _ -> access pipe master "graphuva" (runInsert [])
     print $ encode $ showJSON searchResult
-  | otherwise        = main' (head args) (args !! 1)
+  | otherwise        = main' (head args) (args !! 1) pipe
 
-main' query stop = do
+main' query stop pipe = do
   print query
   doc <- getDoc query
   searchResult <- scanDoc query doc
   print searchResult
+  case searchResult of
+    Right plist -> access pipe master "graphuva" (runInsert plist)
+    _ -> access pipe master "graphuva" (runInsert [])
   if searchResult == Left TooManyResultsErr
-    then main' (nextDeepQuery query) stop
-    else if next >= stop then print "done!" else main' next stop where next = nextQuery query
+    then main' (nextDeepQuery query) stop pipe
+    else if next >= stop then print "done!" else main' next stop pipe where next = nextQuery query
   
 getDoc query = do  
   rsp <- simpleHTTP $ uvaRequest query
@@ -179,14 +179,16 @@ mongoURL = "ds053788.mongolab.com:53788"
 
 runInsert plist = do
   auth "hermes" "hermes"
-  insertPeople plist
+  insertPeople' plist
 
+{-
 insertPeople plist = do
   case null plist of       
     True -> find (select [] "people2") {sort = ["home.city" =: 1]}
     False -> do
       insertPerson (head plist)
-      runInsert (tail plist)
+     runInsert (tail plist)
+-}
 
 insertPeople' plist = insertMany "people" (bsonList plist)
 
