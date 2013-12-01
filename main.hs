@@ -3,6 +3,7 @@
 import Network.HTTP
 import Network.URI
 import Data.Char
+import Data.List (elemIndex)
 import Data.Maybe
 import Text.XML.HXT.Core
 import Data.Tree.NTree.TypeDefs
@@ -40,7 +41,7 @@ main = do
   args <- getArgs
   pipe <- runIOE $ connect (readHostPort mongoURL)
   doWork args pipe
---  Database.MongoDB.close pipe
+  Database.MongoDB.close pipe
 
 doWork args pipe
   | null args = main' "a" "{"
@@ -82,20 +83,28 @@ scanDoc query doc = do
       if length centers == 2 
         then do
           texts <- runX $ doc //> hasName "td" //> getText
+          let textList = (tail.tail.tail) texts
           let fullName = (unwords.init.words) (texts !! 1)
           let computingId = (tail.init.last.words) (texts !! 1)
           let person = Person {
                 firstName = clean $ (head.words) fullName,
                 lastName = clean $ (last.words) fullName,
-                email = clean $ safeMap toLower texts 12,
-                other = [ ("status", clean $ trim $ texts !! 6)
-                        , ("department", clean $ trim $ texts !! 8)
+                email = clean $ map toLower $
+                        findKeyInList textList "Primary E-Mail Address",
+                other = [ ("status", clean $ trim $ 
+                                     findKeyInList textList "Classification")
+                        , ("department", clean $ trim $
+                                         findKeyInList textList "Department")
                         , ("computingId", computingId) ]
                 }
           return $ Right [person]
         else do
           rows <- runX $ doc //> hasName "tr"
           return $ Right (readTableRows rows)
+  
+findKeyInList list key = case elemIndex key list of
+  Just i -> list !! (i+1)
+  Nothing -> ""
   
 safeMap f ls n = if length ls >= n then map f $ ls !! n else ""
 
