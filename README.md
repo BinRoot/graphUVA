@@ -27,16 +27,16 @@ Sample JSON
 
     { "Left": { "err": "No Results" } }
 
-Notes
-=====
-`cabal install http-conduit`
 
-`cabal install hxt`
+Running Haskell
+===============
+    $ make
 
-`cabal install json`
+Running `make` produces a `main` executable.
 
-if that fails, first do 
-`sudo apt-get install libghc-zlib-dev libghc-zlib-bindings-dev`
+If running `make` fails, do 
+
+    $ sudo apt-get install libghc-zlib-dev libghc-zlib-bindings-dev
 
 
 
