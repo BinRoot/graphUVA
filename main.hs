@@ -1,10 +1,17 @@
+{-# LANGUAGE OverloadedStrings, ExtendedDefaultRules, NoMonomorphismRestriction #-}
+
 import Network.HTTP
 import Network.URI
 import Data.Char
+import Data.Maybe
 import Text.XML.HXT.Core
 import Data.Tree.NTree.TypeDefs
 import System.Environment 
 import Text.JSON
+import Database.MongoDB
+import Control.Monad.Trans (liftIO)
+import qualified Data.Map as M
+import qualified Data.Text as T
 
 data Person = Person 
               { firstName :: String
@@ -31,14 +38,19 @@ type SearchResult = Either SearchResultErr [Person]
 -- ./main          # searches everything
 main = do
   args <- getArgs
-  doWork args
-  
-doWork args
+  pipe <- runIOE $ connect (readHostPort mongoURL)
+  doWork args pipe
+--  Database.MongoDB.close pipe
+
+doWork args pipe
   | null args = main' "a" "{"
   | length args == 1 = do
     let query = head args
     doc <- getDoc query
     searchResult <- scanDoc query doc
+    case searchResult of
+      Right plist -> access pipe master "graphuva" (runInsert plist)
+      _ -> access pipe master "graphuva" (runInsert [])
     print $ encode $ showJSON searchResult
   | otherwise        = main' (head args) (args !! 1)
 
@@ -71,12 +83,14 @@ scanDoc query doc = do
         then do
           texts <- runX $ doc //> hasName "td" //> getText
           let fullName = (unwords.init.words) (texts !! 1)
+          let computingId = (tail.init.last.words) (texts !! 1)
           let person = Person {
                 firstName = clean $ (head.words) fullName,
                 lastName = clean $ (last.words) fullName,
                 email = clean $ safeMap toLower texts 12,
-                other = [("status", clean $ trim $ texts !! 6)
-                        ,("department", clean $ trim $ texts !! 8)]
+                other = [ ("status", clean $ trim $ texts !! 6)
+                        , ("department", clean $ trim $ texts !! 8)
+                        , ("computingId", computingId) ]
                 }
           return $ Right [person]
         else do
@@ -102,9 +116,11 @@ parseRow row = Person {
   email = clean $ map toLower $ getEmailFromTr row,
   other = [ ("phoneNumber", clean pNum)
           , ("status", clean $ getTypeFromTr row)
-          , ("department", clean $ getDepartmentFromTr row)]
+          , ("department", clean $ getDepartmentFromTr row)
+          , ("computingId", computingId)]
   }
   where fullName = (unwords.init.words) $ getNameFromTr row
+        computingId = (tail.init.last.words) $ getNameFromTr row
         pNum = getPhoneNumberFromTr row
         
 
@@ -149,3 +165,35 @@ trim = f . f
          
 clean :: String -> String
 clean str = if str == "\160" then "" else str
+
+mongoURL = "ds053788.mongolab.com:53788"
+
+runInsert plist = do
+  auth "hermes" "hermes"
+  insertPeople plist
+
+insertPeople plist = do
+  case null plist of       
+    True -> find (select [] "people2") {sort = ["home.city" =: 1]}
+    False -> do
+      insertPerson (head plist)
+      runInsert (tail plist)
+
+insertPeople' plist = insertMany "people" (bsonList plist)
+
+insertPerson p = repsert (select ["_id" =: computingId p] "people") (bsonStruct p)
+
+bsonTuple [] = []
+bsonTuple ((a,b):xs) = ((T.pack a) =: b) : (bsonTuple xs)
+
+bsonStruct p = [ "_id" =: computingId p
+               , "firstName" =: firstName p
+               , "lastName" =: lastName p
+               , "email" =: email p
+               , "other" =: (bsonTuple.other) p ]
+
+computingId p = getValFromMap (other p) "computingId"
+getValFromMap m key = (fromMaybe "" $ M.lookup key (M.fromList m))
+
+bsonList [] = []
+bsonList (p:ps) = bsonStruct p : bsonList ps
