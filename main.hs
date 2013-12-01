@@ -111,9 +111,11 @@ safeMap f ls n = if length ls >= n then map f $ ls !! n else ""
 nextDeepQuery query = query ++ "a"
 
 nextQuery "z" = "{"
-nextQuery query = if last query == 'z'
-                    then nextQuery $ init query
-                    else init query ++ [succ $ last query]
+nextQuery query = if last query == ' '
+                  then nextQuery $ init query
+                  else init query ++ if last query == 'z'
+                                     then " "
+                                     else [succ $ last query]
 
 readTableRows :: [NTree XNode] -> [Person]
 readTableRows (a:b:rows) = fmap parseRow rows
