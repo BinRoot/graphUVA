@@ -2,7 +2,7 @@
   "manifest_version": 2,
 
   "name": "UVA People Search",
-  "description": "Autocomplete for UVa student computing IDs and names, press 'enter' or click on any result to perform a Google search on that person." ,
+  "description": "Autocomplete for UVa student computing IDs and names, press 'enter' or click on any result to perform a Google search on that person. Additionally, use Ctrl+Shift+U to quickly pull down the extension!" ,
   "version": "0.3.1.4",
   "content_scripts": [ {
     "js": [ "jquery-2.0.3.min.js", "hogan-2.0.0.js", "typeahead.min.js", "script.js"],
@@ -14,6 +14,14 @@
         "38": "icon_38.png"
     },
     "default_popup": "popup.html"
+  },
+  "commands": {
+    "_execute_browser_action": {
+      "suggested_key": {
+        "default": "Ctrl+Shift+U",
+        "mac": "MacCtrl+Shift+U"
+      }
+    }
   },
   "permissions": [
     "tabs",
