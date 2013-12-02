@@ -1,15 +1,18 @@
 {
   "manifest_version": 2,
 
-  "name": "graphUVA",
-  "description": "Autocomplete for UVa computing IDs",
-  "version": "1.0",
+  "name": "UVA People Search",
+  "description": "Autocomplete for UVa student computing IDs and names, press 'enter' or click on any results to perform a Google search on that person." ,
+  "version": "0.3.1.4",
   "content_scripts": [ {
     "js": [ "jquery-2.0.3.min.js", "hogan-2.0.0.js", "typeahead.min.js", "script.js"],
     "matches": [ "http://*/*", "https://*/*"]
   }],
   "browser_action": {
-    "default_icon": "icon.png",
+    "default_icon": {
+        "19": "icon_19.png",
+        "38": "icon_38.png"
+    },
     "default_popup": "popup.html"
   },
   "permissions": [
@@ -20,5 +23,10 @@
     "scripts": ["background.js"],
     "persistent": false
   },
-  "content_security_policy": "script-src 'self' 'unsafe-eval'; object-src 'self'"
+  "content_security_policy": "script-src 'self' 'unsafe-eval'; object-src 'self'",
+  "icons": {
+        "16": "icon_16.png",
+        "48": "icon_48.png",
+        "128": "icon_128.png"
+  }
 }
