@@ -10,6 +10,7 @@ import Data.Tree.NTree.TypeDefs
 import System.Environment 
 import Text.JSON
 import Database.MongoDB
+import Control.Concurrent (threadDelay)
 import Control.Monad.Trans (liftIO)
 import qualified Data.Map as M
 import qualified Data.Text as T
@@ -58,8 +59,9 @@ main' query stop pipe = do
   searchResult <- scanDoc query doc
   print searchResult
   case searchResult of
-    Right plist -> access pipe master "graphuva" (runInsert plist)
+    Right plist -> access pipe (ConfirmWrites ["w" =: 2]) "graphuva" (runInsert plist)
     _ -> access pipe master "graphuva" (runInsert [])
+  threadDelay 5000000
   if searchResult == Left TooManyResultsErr
     then main' (nextDeepQuery query) stop pipe
     else if next >= stop then print "done!" else main' next stop pipe where next = nextQuery query
@@ -111,11 +113,9 @@ safeMap f ls n = if length ls >= n then map f $ ls !! n else ""
 nextDeepQuery query = query ++ "a"
 
 nextQuery "z" = "{"
-nextQuery query = if last query == ' '
+nextQuery query = if last query == 'z'
                   then nextQuery $ init query
-                  else init query ++ if last query == 'z'
-                                     then " "
-                                     else [succ $ last query]
+                  else init query ++ [succ $ last query]
 
 readTableRows :: [NTree XNode] -> [Person]
 readTableRows (a:b:rows) = fmap parseRow rows
@@ -188,13 +188,13 @@ insertPeople plist = do
   case null plist of       
     True -> find (select [] "people2") {sort = ["home.city" =: 1]}
     False -> do
-      insertPerson (head plist)
-     runInsert (tail plist)
+      insertPerson' (head plist)
+      runInsert (tail plist)
 -}
-
 insertPeople' plist = insertMany "people" (bsonList plist)
 
 insertPerson p = repsert (select ["_id" =: computingId p] "people") (bsonStruct p)
+insertPerson' p = save "people" (bsonStruct p)
 
 bsonTuple [] = []
 bsonTuple ((a,b):xs) = ((T.pack a) =: b) : (bsonTuple xs)
