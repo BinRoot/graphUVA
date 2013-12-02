@@ -69,8 +69,7 @@ p {
 
 .tt-suggestion.tt-is-under-cursor {
   color: #fff;
-  background-color: rgba(0, 151, 207, 0.40);
-
+  background-color: rgba(0, 151, 207, 0.31);
 }
 
 .tt-suggestion p {
@@ -78,7 +77,7 @@ p {
 }
 
 .details {
-    color: #2daada;
+    color: #2bb2dd;
     font-size: 12px;
 }
 
