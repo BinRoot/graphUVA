@@ -2,7 +2,6 @@ from flask import Flask
 from flask import request
 import subprocess
 import os
-import sys
 import json
 
 graphUVA = Flask(__name__)
@@ -36,7 +35,7 @@ def query():
 
 @graphUVA.route('/')
 def index():
-    return str(os.getcwd())
+    return "Landing"
 
 if __name__ == '__main__':
     graphUVA.run()
