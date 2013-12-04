@@ -6,7 +6,7 @@ import sys
 import json
 
 app = Flask(__name__)
-os.chdir(os.path.dirname(os.path.abspath(sys.argv[0])))
+#os.chdir(os.path.dirname(os.path.abspath(sys.argv[0])))
 
 @app.route('/search')
 def query():
