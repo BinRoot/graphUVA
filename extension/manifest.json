@@ -3,7 +3,7 @@
 
   "name": "UVA People Search",
   "description": "Autocomplete for UVa computing IDs & names, press 'enter' on a result to perform a search. (Ctrl+Shift+U to pull down the extension)" ,
-  "version": "0.3.1.4",
+  "version": "0.3.1.6",
   "content_scripts": [ {
     "js": [ "jquery-2.0.3.min.js", "hogan-2.0.0.js", "typeahead.min.js", "script.js"],
     "matches": [ "http://*/*", "https://*/*"]
