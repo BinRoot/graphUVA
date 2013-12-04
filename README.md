@@ -7,7 +7,7 @@ This repository contains both a python webserver for querying the LDAP UVa Peopl
 
 Running the Webserver
 =====================
-To run the server use `python graphUVA.py`
+To run the server do `python graphUVA.py`
 
 Hit the `/search` endpoint with the following query parameter `?q=marisa` and check to see if a response is received.
 
@@ -47,16 +47,16 @@ Setting up EC2
 ==============
 ## URL
 
-    ec2-54-242-145-107.compute-1.amazonaws.com
+    ec2-107-22-4-107.compute-1.amazonaws.com
 
 ## Setup Instructions
 #### Setup EC2 with your public key to make git work easier
 
-    cat ~/.ssh/id_rsa.pub | ssh -i ~/Downloads/graphUVA.pem ubuntu@ec2-54-242-145-107.compute-1.amazonaws.com "cat >> .ssh/authorized_keys"
+    cat ~/.ssh/id_rsa.pub | ssh -i ~/Downloads/graphUVA.pem ubuntu@ec2-107-22-4-107.compute-1.amazonaws.com "cat >> .ssh/authorized_keys"
 
 #### Add the remote git repo
 
-    git remote add aws ubuntu@ec2-54-242-145-107.compute-1.amazonaws.com:~/graphUVA.git
+    git remote add aws ubuntu@ec2-107-22-4-107.compute-1.amazonaws.com:~/graphUVA.git
 
 #### Push to remote repo
 
