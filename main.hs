@@ -61,7 +61,6 @@ main' query stop pipe = do
   case searchResult of
     Right plist -> access pipe (ConfirmWrites ["w" =: 2]) "graphuva" (runInsert plist)
     _ -> access pipe master "graphuva" (runInsert [])
-  threadDelay 5000000
   if searchResult == Left TooManyResultsErr
     then main' (nextDeepQuery query) stop pipe
     else if next >= stop then print "done!" else main' next stop pipe where next = nextQuery query
