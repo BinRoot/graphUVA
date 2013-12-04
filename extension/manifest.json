@@ -2,7 +2,7 @@
   "manifest_version": 2,
 
   "name": "UVA People Search",
-  "description": "Autocomplete for UVa student computing IDs and names, press 'enter' or click on any result to perform a Google search on that person. Additionally, use Ctrl+Shift+U to quickly pull down the extension!" ,
+  "description": "Autocomplete for UVa computing IDs & names, press 'enter' on a result to perform a search. (Ctrl+Shift+U to pull down the extension)" ,
   "version": "0.3.1.4",
   "content_scripts": [ {
     "js": [ "jquery-2.0.3.min.js", "hogan-2.0.0.js", "typeahead.min.js", "script.js"],
@@ -33,7 +33,7 @@
     "scripts": ["background.js"],
     "persistent": false
   },
-  "content_security_policy": "script-src 'self' 'unsafe-eval'; object-src 'self'",
+  "content_security_policy": "script-src 'self' 'unsafe-eval' https://ssl.google-analytics.com; object-src 'self';",
   "icons": {
         "16": "icon_16.png",
         "48": "icon_48.png",

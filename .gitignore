@@ -8,3 +8,4 @@ extension.crx
 access.log
 error.log
 graphUVA.wsgi
+extension.zip
