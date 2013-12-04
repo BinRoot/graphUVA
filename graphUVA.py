@@ -35,5 +35,9 @@ def query():
         print "Unexpected error:", sys.exc_info()[0]
         return "[]"
 
+@app.route('/')
+def index():
+    return "sup"
+
 if __name__ == '__main__':
-    app.run(debug=True)
+    app.run(port=80)
