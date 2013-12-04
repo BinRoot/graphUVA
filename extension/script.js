@@ -17,6 +17,9 @@ $(document).ready(function(){
     $('.search').on('typeahead:closed', function(obj, datum, name) {
         chrome.runtime.sendMessage( { type: "close" });
     });
+
+    setTimeout(function() {
+        $('input.search').focus();}, 100);
 });
 
 (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
