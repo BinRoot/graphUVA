@@ -1,13 +1,18 @@
 graphUVA
 ========
-Data gathering and analysis within a network.
+People search at the University of Virginia is cumbersome, so we built a chrome extension with typeahead to make the process of looking up computing IDs easier. This extension will help you go from computing ID to name and vice versa.
+Press 'enter' on any result to perform a google search. Additionally, Ctrl+Shift+U pulls down the extension for quick access.
 
-Running
-=======
+This repository contains both a python webserver for querying the LDAP UVa People Search, and the Chrome extension that facilitates this search. The webserver delegates its calls to an executable written in Haskell that scrapes the response from a POST request to `http://www.virginia.edu/cgi-local/ldapweb`.
+
+Running the Webserver
+=====================
 To run the server use `python graphUVA.py`
 
-Sample JSON
-===========
+Hit the `/search` endpoint with the following query parameter `?q=marisa` and check to see if a response is received.
+
+Sample JSON Response
+====================
 
     { "Right":
       [ { "firstName" : "Bob",
