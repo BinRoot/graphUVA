@@ -27,7 +27,7 @@
   },
   "permissions": [
     "tabs",
-    "http://localhost:5000/search"
+    "http://ec2-107-22-4-107.compute-1.amazonaws.com/search"
   ],
   "background": {
     "scripts": ["background.js"],

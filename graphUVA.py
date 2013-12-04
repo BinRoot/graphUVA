@@ -5,10 +5,10 @@ import os
 import sys
 import json
 
-app = Flask(__name__)
-#os.chdir(os.path.dirname(os.path.abspath(sys.argv[0])))
+graphUVA = Flask(__name__)
+os.chdir('graphUVA')
 
-@app.route('/search')
+@graphUVA.route('/search')
 def query():
     try:
         q = request.args.get('q')
@@ -32,12 +32,11 @@ def query():
         else:
             return "[]"
     except:
-        print "Unexpected error:", sys.exc_info()[0]
         return "[]"
 
-@app.route('/')
+@graphUVA.route('/')
 def index():
-    return "sup"
+    return str(os.getcwd())
 
 if __name__ == '__main__':
-    app.run(port=80)
+    graphUVA.run()

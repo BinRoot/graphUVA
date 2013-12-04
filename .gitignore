@@ -5,3 +5,6 @@ main.o
 main
 extension.pem
 extension.crx
+access.log
+error.log
+graphUVA.wsgi

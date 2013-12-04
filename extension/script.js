@@ -1,7 +1,7 @@
 $(document).ready(function(){
     $('input.search').typeahead({
         name: 'results',
-        remote: 'http://localhost:5000/search?q=%QUERY',
+        remote: 'http://ec2-107-22-4-107.compute-1.amazonaws.com/search?q=%QUERY',
         limit: 6,
         template: ['<p>{{value}} {{#email}}<span class="email">- {{email}}{{/email}}</p>',
                    '<p class="details">{{status}}</p>',
