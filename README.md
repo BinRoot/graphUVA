@@ -3,7 +3,18 @@ graphUVA
 People search at the University of Virginia is cumbersome, so we built a chrome extension with typeahead to make the process of looking up computing IDs easier. This extension will help you go from computing ID to name and vice versa.
 Press 'enter' on any result to perform a google search. Additionally, Ctrl+Shift+F pulls down the extension for quick access.
 
+The Old Search:
+===============
+
+![People Search](http://i.imgur.com/1JKSO6V.png)
+
 This repository contains both a python webserver for querying the LDAP UVa People Search, and the Chrome extension that facilitates this search. The webserver delegates its calls to an executable written in Haskell that scrapes the response from a POST request to `http://www.virginia.edu/cgi-local/ldapweb`.
+
+Our New Chrome Extension:
+=========================
+
+![Chrome Extension](https://lh3.googleusercontent.com/HQIc1t43bAbuGyE-U6odgWLgbF7KM6do1W6OQChPb7Q4G0KqkAz18UeEvjYffA59g8lZfz6e=s640-h400-e365-rw)
+
 
 Links
 =====================
