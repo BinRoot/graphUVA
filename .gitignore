@@ -9,3 +9,4 @@ access.log
 error.log
 graphUVA.wsgi
 extension.zip
+settings.cfg
