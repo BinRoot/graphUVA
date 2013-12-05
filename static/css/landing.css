@@ -24,7 +24,7 @@ p.extension{
     text-align: center;
 }
 
-.search {
+.search-page {
     width: 500px;
     height: 40px;
     border: 1px solid #ccc;
@@ -38,7 +38,7 @@ p.extension{
     color: #444546;
 }
 
-.search:focus {
+.search-page:focus {
     border-color: #2bb2dd;
 }
 
