@@ -5,6 +5,16 @@ Press 'enter' on any result to perform a google search. Additionally, Ctrl+Shift
 
 This repository contains both a python webserver for querying the LDAP UVa People Search, and the Chrome extension that facilitates this search. The webserver delegates its calls to an executable written in Haskell that scrapes the response from a POST request to `http://www.virginia.edu/cgi-local/ldapweb`.
 
+Links
+=====================
+[Home Page](http://uvasear.ch)
+
+
+[Chrome Extension](https://chrome.google.com/webstore/detail/uva-people-search/jdebncmmapengneahngfihdnoajlfmbn/details)
+
+
+[@binroot](https://twitter.com/binroot), [@jasdev](https://twitter.com/jasdev)
+
 Running the Webserver
 =====================
 To run the server do `python graphUVA.py`
