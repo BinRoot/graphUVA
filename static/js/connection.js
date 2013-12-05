@@ -21,14 +21,18 @@ $(document).ready(function(){
             $(".search-page").prop('disabled', true);
             $(".results").hide();
             $("#load").show();
-            setTimeout(function(){
+            $.get("http://uvasear.ch/similarity?url=" + $(".search-page").val(), function(data) {
+                $(".results").empty();
+                $(".results").append('<tr><th>Name</th></tr>');
+
+                for (var i = 0; i < data.length; i++){
+                    $(".results").append('<tr><td>' + data[i] +  '</td></tr>');
+                }
+
                 $("#load").hide();
                 $(".results").show();
                 $(".search-page").prop('disabled', false);
-                //$.get( "http://uvasear.ch/update?id=" + datum.comp_id, function(data) {});
-                //Empty table $(".results").hide();
-                //Append results $("#preq tbody").append('<tr id="row"><td></td><td></td><td></td></tr>');
-            },3000);
+            });
         }
     });
 });

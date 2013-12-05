@@ -13,8 +13,8 @@ from pytz import timezone
 graphUVA = Flask(__name__)
 graphUVA.config.from_envvar('SETTINGS')
 
-#os.chdir('graphUVA')
-os.chdir(os.path.dirname(sys.argv[0]))
+os.chdir('graphUVA')
+#os.chdir(os.path.dirname(sys.argv[0]))
 
 DATETIME_FORMAT = '%Y-%m-%d %H:%M:%S'
 MONGODB_URI = "mongodb://%(user)s:%(pass)s@ds053788.mongolab.com:53788/graphuva" % {"user": graphUVA.config['USER'], "pass": graphUVA.config['PASSWORD'] }
@@ -80,7 +80,7 @@ def top():
 @graphUVA.route('/similarity')
 def similarity():
     url = request.args.get('url')
-    process = subprocess.Popen(["SIMILARITY_BINARY", url], stdout=subprocess.PIPE)
+    process = subprocess.Popen(["./analyze", url], stdout=subprocess.PIPE)
     output = process.communicate()[0]
     out = json.loads(json.loads(str(output)))
     return json.dumps(out)
