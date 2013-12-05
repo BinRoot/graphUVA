@@ -1,0 +1,24 @@
+name:                analyze
+version:             0.1.0.0
+-- synopsis:            
+-- description:         
+license:             GPL-2
+author:              Nishant Shukla
+-- maintainer:          
+-- copyright:           
+category:            Web
+build-type:          Simple
+cabal-version:       >=1.8
+
+executable analyze
+  main-is:             analyze.hs
+  -- other-modules:       
+  build-depends:       base ==4.6.*,
+                       directory >=1.2.0.1,
+                       MissingH >=1.2.0.2,
+                       csv >=0.1.1,
+                       containers >=0.5.0.0,
+                       HandsomeSoup >=0.3.2,
+                       hxt >=9.3.1,
+                       HTTP >=4000.2.9,
+                       mongoDB >=1.4.1.1
