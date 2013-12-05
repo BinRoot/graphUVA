@@ -1,5 +1,6 @@
 from flask import Flask
 from flask import request
+from flask import render_template
 import subprocess
 import os
 import json
@@ -76,7 +77,7 @@ def top():
 
 @graphUVA.route('/')
 def index():
-    return "landing page yo"
+    return render_template("landing.html")
 
 if __name__ == '__main__':
     graphUVA.run(debug=True)

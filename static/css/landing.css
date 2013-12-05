@@ -1,8 +1,45 @@
+body{
+    padding-top: 10px;
+}
+
 html {
   font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
   font-size: 15px;
   line-height: 1.2;
   color: #333;
+}
+
+h1 {
+    font-family: 'Open Sans', sans-serif;
+    font-size: 5em;
+    text-align: center;
+    padding-bottom: 20px;
+}
+
+p.extension{
+    text-align: center;
+}
+
+#main {
+    text-align: center;
+}
+
+.search {
+    width: 500px;
+    height: 40px;
+    border: 1px solid #ccc;
+    -moz-border-radius: 10px;
+    -webkit-border-radius: 10px;
+    border-radius: 10px;
+    font-size: 15px;
+    padding: 4px 7px;
+    outline: 0;
+    -webkit-appearance: none;
+    color: #444546;
+}
+
+.search:focus {
+    border-color: #2bb2dd;
 }
 
 p {
@@ -84,3 +121,23 @@ p {
 .email {
     font-size: 12px;
 }
+
+* {
+    margin: 0;
+}
+html, body {
+    height: 98%;
+}
+.wrapper {
+    min-height: 98%;
+    height: auto !important;
+    height: 98%;
+    margin: 0 auto -1em;
+}
+.footer, .push {
+    height: 1em;
+    text-align: center;
+}
+
+
+
