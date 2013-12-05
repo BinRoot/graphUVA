@@ -34,7 +34,8 @@ Hit the `/search` endpoint with the following query parameter `?q=marisa` and ch
 
 Sample JSON Response
 ====================
-
+GET request to `/search` endpoint: [uvasear.ch/search?q=anat](http://uvasear.ch/search?q=anat)
+    
     [
       {
         status: "Undergraduate Student",
