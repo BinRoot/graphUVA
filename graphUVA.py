@@ -80,7 +80,7 @@ def top():
 @graphUVA.route('/similarity')
 def similarity():
     url = request.args.get('url')
-    process = subprocess.Popen(["SIMILARITY_BINARY"], stdout=subprocess.PIPE)
+    process = subprocess.Popen(["./analyze", url], stdout=subprocess.PIPE)
     output = process.communicate()[0]
     out = json.loads(json.loads(str(output)))
     return json.dumps(out)
