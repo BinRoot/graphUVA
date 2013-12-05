@@ -79,11 +79,14 @@ def top():
 
 @graphUVA.route('/similarity')
 def similarity():
-    url = request.args.get('url')
-    process = subprocess.Popen(["./analyze", url], stdout=subprocess.PIPE)
-    output = process.communicate()[0]
-    out = json.loads(json.loads(str(output)))
-    return json.dumps(out)
+    try:
+        url = request.args.get('url')
+        process = subprocess.Popen(["./analyze", url], stdout=subprocess.PIPE)
+        output = process.communicate()[0]
+        out = json.loads(str(output))
+        return json.dumps(out)
+    except:
+        return str(sys.exc_info()[0])
 
 @graphUVA.route('/top10')
 def top10():
