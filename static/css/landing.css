@@ -16,7 +16,7 @@ h1 {
     padding-bottom: 20px;
 }
 
-p.extension{
+p.links{
     text-align: center;
 }
 
@@ -122,16 +122,17 @@ p {
     font-size: 12px;
 }
 
+/* Sticky footer block */
 * {
     margin: 0;
 }
 html, body {
-    height: 98%;
+    height: 93%;
 }
 .wrapper {
-    min-height: 98%;
+    min-height: 93%;
     height: auto !important;
-    height: 98%;
+    height: 93%;
     margin: 0 auto -1em;
 }
 .footer, .push {
