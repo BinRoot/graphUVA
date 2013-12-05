@@ -77,9 +77,21 @@ def top():
     finally:
         client.close()
 
+@graphUVA.route('/similarity')
+def similarity():
+    url = request.args.get('url')
+    process = subprocess.Popen(["SIMILARITY_BINARY"], stdout=subprocess.PIPE)
+    output = process.communicate()[0]
+    out = json.loads(json.loads(str(output)))
+    return json.dumps(out)
+
 @graphUVA.route('/top10')
 def top10():
     return render_template("top.html", top=json.loads(top()))
+
+@graphUVA.route('/connection')
+def connection():
+    return render_template("connection.html")
 
 @graphUVA.route('/')
 def index():

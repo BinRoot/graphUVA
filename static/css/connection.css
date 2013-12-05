@@ -1,0 +1,97 @@
+body{
+    padding-top: 10px;
+}
+
+html {
+  font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+  font-size: 15px;
+  line-height: 1.2;
+  color: #333;
+}
+
+h1 {
+    font-family: 'Open Sans', sans-serif;
+    font-size: 5em;
+    text-align: center;
+    padding-bottom: 20px;
+}
+
+#main {
+    text-align: center;
+}
+
+p.links{
+    text-align: center;
+    padding-bottom: 20px;
+}
+
+#load{
+    padding-top: 200px;
+}
+
+table
+{
+    margin-left: auto;
+    margin-right: auto;
+}
+
+tr:nth-child(odd){
+    background-color: rgba(43, 178, 221, 0.17);
+}
+
+tr:nth-child(even){
+    background-color:#ffffff;
+}
+
+tr{
+    line-height: 30px;
+}
+
+td{
+    width: 200px;
+}
+
+th{
+    background-color: #0097cf;
+    color: #ffffff;
+}
+
+.search-page {
+  width: 396px;
+  height: 30px;
+  padding: 8px 12px;
+  font-size: 15px;
+  line-height: 30px;
+  border: 2px solid #ccc;
+  -webkit-border-radius: 8px;
+     -moz-border-radius: 8px;
+          border-radius: 8px;
+  outline: none;
+    margin-bottom: 20px;
+}
+
+.search-page:focus {
+    border: 2px solid #0097cf;
+}
+
+/* Sticky footer block */
+* {
+    margin: 0;
+}
+html, body {
+    height: 93%;
+}
+.wrapper {
+    min-height: 93%;
+    height: auto !important;
+    height: 93%;
+    margin: 0 auto -1em;
+}
+.footer, .push {
+    height: 1em;
+    text-align: center;
+}
+
+.octocat{
+    display: block;
+}

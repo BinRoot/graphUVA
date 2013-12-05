@@ -1,26 +1,38 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>UVA People Search</title>
+    <title>URL Similarity</title>
     <link href='http://fonts.googleapis.com/css?family=Open+Sans:800italic,400' rel='stylesheet' type='text/css'>
-    <link rel="stylesheet" href="../static/css/landing.css">
+    <link rel="stylesheet" href="../static/css/connection.css">
     <link rel="shortcut icon" href="../static/img/favicon.ico" type="image/x-icon">
     <link rel="icon" href="../static/img/favicon.ico" type="image/x-icon">
 </head>
 <body>
 
     <div class="wrapper">
-        <h1>UVA People Search</h1>
+        <h1>UVA URL Similarity</h1>
 
         <p class="links">
             <a href="https://chrome.google.com/webstore/detail/uva-people-search/jdebncmmapengneahngfihdnoajlfmbn" target="_blank">Grab the extension</a>
             -
-            <a href="/top10">Top 10</a>
+            <a href="/">Home</a>
             -
-            <a href="/connection">URL Search</a>
+            <a href="/top10">Top 10</a>
         </p>
         <div id="main">
-            <input class="search-page" type="text" placeholder="Enter computing ID or name...">
+            <input class="search-page" type="text" placeholder="Enter URL...">
+            <div id="load"></div>
+            <table class="results">
+                <tr>
+                    <th>Name</th>
+                </tr>
+                <tr>
+                    <td>Jasdev Singh</td>
+                </tr>
+                <tr>
+                    <td>Nishant Shukla</td>
+                </tr>
+            </table>
         </div>
     </div>
 
@@ -30,9 +42,9 @@
         <a class="octocat" href="https://github.com/BinRoot/graphUVA" target="_blank"><img src="../static/img/octocat.png" height="94" width="114"></a>
         Made with love by <a href="https://twitter.com/jasdev" target="_blank">@jasdev</a> and <a href="https://twitter.com/binroot" target="_blank">@binroot</a>
     </div>
+
     <script src="../static/js/jquery.js"></script>
-    <script src="../static/js/typeahead.js"></script>
-    <script src="../static/js/hogan-2.0.0.js"></script>
-    <script src="../static/js/landing.js"></script>
+    <script src="../static/js/spin.min.js"></script>
+    <script src="../static/js/connection.js"></script>
 </body>
 </html>
