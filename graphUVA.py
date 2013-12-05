@@ -1,17 +1,20 @@
 from flask import Flask
 from flask import request
+from flask import render_template
 import subprocess
 import os
 import json
 import pymongo
 import datetime
 import copy
+import sys
 from pytz import timezone
 
 graphUVA = Flask(__name__)
 graphUVA.config.from_envvar('SETTINGS')
 
 os.chdir('graphUVA')
+#os.chdir(os.path.dirname(sys.argv[0]))
 
 DATETIME_FORMAT = '%Y-%m-%d %H:%M:%S'
 MONGODB_URI = "mongodb://%(user)s:%(pass)s@ds053788.mongolab.com:53788/graphuva" % {"user": graphUVA.config['USER'], "pass": graphUVA.config['PASSWORD'] }
@@ -74,9 +77,25 @@ def top():
     finally:
         client.close()
 
+@graphUVA.route('/similarity')
+def similarity():
+    url = request.args.get('url')
+    process = subprocess.Popen(["SIMILARITY_BINARY"], stdout=subprocess.PIPE)
+    output = process.communicate()[0]
+    out = json.loads(json.loads(str(output)))
+    return json.dumps(out)
+
+@graphUVA.route('/top10')
+def top10():
+    return render_template("top.html", top=json.loads(top()))
+
+@graphUVA.route('/connection')
+def connection():
+    return render_template("connection.html")
+
 @graphUVA.route('/')
 def index():
-    return "landing page yo"
+    return render_template("landing.html")
 
 if __name__ == '__main__':
     graphUVA.run(debug=True)

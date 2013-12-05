@@ -1,9 +1,19 @@
 graphUVA
 ========
 People search at the University of Virginia is cumbersome, so we built a chrome extension with typeahead to make the process of looking up computing IDs easier. This extension will help you go from computing ID to name and vice versa.
-Press 'enter' on any result to perform a google search. Additionally, Ctrl+Shift+U pulls down the extension for quick access.
+Press 'enter' on any result to perform a google search. Additionally, Ctrl+Shift+F pulls down the extension for quick access.
 
 This repository contains both a python webserver for querying the LDAP UVa People Search, and the Chrome extension that facilitates this search. The webserver delegates its calls to an executable written in Haskell that scrapes the response from a POST request to `http://www.virginia.edu/cgi-local/ldapweb`.
+
+Links
+=====================
+[Home Page](http://uvasear.ch)
+
+
+[Chrome Extension](https://chrome.google.com/webstore/detail/uva-people-search/jdebncmmapengneahngfihdnoajlfmbn/details)
+
+
+[@binroot](https://twitter.com/binroot), [@jasdev](https://twitter.com/jasdev)
 
 Running the Webserver
 =====================
@@ -14,24 +24,24 @@ Hit the `/search` endpoint with the following query parameter `?q=marisa` and ch
 Sample JSON Response
 ====================
 
-    { "Right":
-      [ { "firstName" : "Bob",
-          "lastName"  : "Boo",
-          "email"     : "bob@boo.com",
-          "other"     : { "phoneNumber" : "123",
-                          "status"      : "Undergraduate Student",
-                          "department"  : "Engineering Undergraduate-senu"
-                        }
-        }
-      ]
-    }
+    [
+      {
+        status: "Undergraduate Student",
+        comp_id: "lol2lol",
+        name: "Soulja Boi",
+        value: "Soulja Boi (lol2lol)",
+        tokens: [
+          "Soulja",
+          "Boi",
+          "lol2lol@virginia.edu"
+        ],
+        phoneNumber: 7039119111,
+        department: "Engineering Undergraduate-senu",
+        email: "lol2lol@virginia.edu"
+      }
+    ]
 
-
-    { "Left": { "err": "Too Many Results" } }
-
-
-    { "Left": { "err": "No Results" } }
-
+    [] is returned if there are too many or no results
 
 Running Haskell
 ===============
