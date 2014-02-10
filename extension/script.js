@@ -1,5 +1,5 @@
 $(document).ready(function(){
-    $('input.search').typeahead({
+    $('input.uva-search').typeahead({
         name: 'results',
         remote: 'http://uvasear.ch/search?q=%QUERY',
         limit: 6,
@@ -10,17 +10,17 @@ $(document).ready(function(){
         engine: Hogan
     });
 
-    $('.search').on('typeahead:selected', function(obj, datum, name) {
+    $('.uva-search').on('typeahead:selected', function(obj, datum, name) {
         chrome.runtime.sendMessage({ type: "selection", person: datum.name });
         $.get( "http://uvasear.ch/update?id=" + datum.comp_id, function(data) {});
     });
 
-    $('.search').on('typeahead:closed', function(obj, datum, name) {
+    $('.uva-search').on('typeahead:closed', function(obj, datum, name) {
         chrome.runtime.sendMessage( { type: "close" });
     });
 
     setTimeout(function() {
-        $('input.search').focus();}, 100);
+        $('input.uva-search').focus();}, 100);
 });
 
 (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
