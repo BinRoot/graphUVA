@@ -13,7 +13,7 @@ This repository contains both a python webserver for querying the LDAP UVa Peopl
 [Our New Chrome Extension](https://chrome.google.com/webstore/detail/uva-people-search/jdebncmmapengneahngfihdnoajlfmbn):
 =========================
 
-![Chrome Extension](https://lh3.googleusercontent.com/HQIc1t43bAbuGyE-U6odgWLgbF7KM6do1W6OQChPb7Q4G0KqkAz18UeEvjYffA59g8lZfz6e=s640-h400-e365-rw)
+![Screenshot](http://i.imgur.com/1CfdETa.png)
 
 
 Links
