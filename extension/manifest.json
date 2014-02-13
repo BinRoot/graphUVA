@@ -3,7 +3,7 @@
 
   "name": "UVA People Search",
   "description": "Autocomplete for UVa computing IDs & names, press 'enter' on a result to perform a search. (Ctrl+Shift+F to pull down the extension)" ,
-  "version": "0.3.1.9",
+  "version": "0.3.2.0",
   "content_scripts": [ {
     "js": [ "jquery-2.0.3.min.js", "hogan-2.0.0.js", "typeahead.min.js", "script.js"],
     "matches": [ "http://*/*", "https://*/*"]
@@ -35,8 +35,9 @@
   },
   "content_security_policy": "script-src 'self' 'unsafe-eval' https://ssl.google-analytics.com; object-src 'self';",
   "icons": {
-        "16": "icon_16.png",
-        "48": "icon_48.png",
-        "128": "icon_128.png"
-  }
+        "16": "search_icon_16.png",
+        "48": "search_icon_48.png",
+        "128": "search_icon_128.png"
+  },
+  "web_accessible_resources": ["jquery-2.0.3.min.map"]
 }
