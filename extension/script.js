@@ -1,26 +1,34 @@
+chrome.runtime.onMessage.addListener(
+    function(request, sender, sendResponse) {
+        if(request.type === "selection"){
+            $('.uva-search').val(request.comp_id);
+
+            var copyDiv = document.getElementsByClassName('uva-search')[0];
+            copyDiv.focus();
+
+            document.execCommand('SelectAll');
+            document.execCommand("Copy", false, null);
+            window.setTimeout(window.close, 10);
+        }
+});
+
 $(document).ready(function(){
     $('input.uva-search').typeahead({
         name: 'results',
         remote: 'http://uvasear.ch/search?q=%QUERY',
-        limit: 6,
+        limit: 5,
         template: ['<p>{{name}} {{#email}}<span class="email">- {{email}}{{/email}}</p>',
                    '<p class="details">{{status}}</p>',
                    '<p class="details">{{department}}</p>',
+                   '<button data-id={{comp_id}} type="button" class="copy-button">Copy ID to clipboard</button>'
                   ].join(''),
         engine: Hogan
     });
 
-    $('.uva-search').on('typeahead:selected', function(obj, datum, name) {
-        chrome.runtime.sendMessage({ type: "selection", person: datum.name });
+    $(document).on('click', '.copy-button', function(e){
+        chrome.runtime.sendMessage({ type: "selection", comp_id: $(this).data('id') });
         $.get( "http://uvasear.ch/update?id=" + datum.comp_id, function(data) {});
     });
-
-    $('.uva-search').on('typeahead:closed', function(obj, datum, name) {
-        chrome.runtime.sendMessage( { type: "close" });
-    });
-
-    setTimeout(function() {
-        $('input.uva-search').focus();}, 100);
 });
 
 (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){

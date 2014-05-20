@@ -2,8 +2,8 @@
   "manifest_version": 2,
 
   "name": "UVA People Search",
-  "description": "Autocomplete for UVa computing IDs & names, press 'enter' on a result to perform a search. (Ctrl+Shift+F to pull down the extension)" ,
-  "version": "0.3.2.1",
+  "description": "Autocomplete for UVa computing IDs & names. Easily copy IDs to your clipboard! (Ctrl+Shift+F to pull down the extension)" ,
+  "version": "0.4",
   "content_scripts": [ {
     "js": [ "jquery-2.0.3.min.js", "hogan-2.0.0.js", "typeahead.min.js", "script.js"],
     "matches": [ "http://*/*", "https://*/*"]
@@ -26,13 +26,9 @@
     }
   },
   "permissions": [
-    "tabs",
-    "http://uvasear.ch/*"
+    "http://uvasear.ch/*",
+    "clipboardWrite"
   ],
-  "background": {
-    "scripts": ["background.js"],
-    "persistent": false
-  },
   "content_security_policy": "script-src 'self' 'unsafe-eval' https://ssl.google-analytics.com; object-src 'self';",
   "icons": {
         "16": "search_icon_16.png",
