@@ -20,7 +20,7 @@ $(document).ready(function(){
         template: ['<p>{{name}} {{#email}}<span class="email">- {{email}}{{/email}}</p>',
                    '<p class="details">{{status}}</p>',
                    '<p class="details">{{department}}</p>',
-                   '<button data-id={{comp_id}} type="button" class="copy-button">Copy ID to clipboard</button>'
+                   '{{#email}}<button data-id={{email}} type="button" class="copy-button">Copy email to clipboard</button>{{/email}}'
                   ].join(''),
         engine: Hogan
     });
