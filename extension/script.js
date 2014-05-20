@@ -1,7 +1,7 @@
 chrome.runtime.onMessage.addListener(
     function(request, sender, sendResponse) {
         if(request.type === "selection"){
-            $('.uva-search').val(request.comp_id);
+            $('.uva-search').val(request.email);
 
             var copyDiv = document.getElementsByClassName('uva-search')[0];
             copyDiv.focus();
@@ -20,13 +20,13 @@ $(document).ready(function(){
         template: ['<p>{{name}} {{#email}}<span class="email">- {{email}}{{/email}}</p>',
                    '<p class="details">{{status}}</p>',
                    '<p class="details">{{department}}</p>',
-                   '{{#email}}<button data-id={{email}} type="button" class="copy-button">Copy email to clipboard</button>{{/email}}'
+                   '{{#email}}<button data-email={{email}} type="button" class="copy-button">Copy email to clipboard</button>{{/email}}'
                   ].join(''),
         engine: Hogan
     });
 
     $(document).on('click', '.copy-button', function(e){
-        chrome.runtime.sendMessage({ type: "selection", comp_id: $(this).data('id') });
+        chrome.runtime.sendMessage({ type: "selection", email: $(this).data('email') });
         $.get( "http://uvasear.ch/update?id=" + datum.comp_id, function(data) {});
     });
 });
